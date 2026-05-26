@@ -11,56 +11,68 @@
 //
 // SESSION.md is committed to the repo so session state persists across machines.
 
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 // Root is two levels up from .claude/hooks/
-const ROOT         = path.resolve(__dirname, '..', '..');
+const ROOT = path.resolve(__dirname, '..', '..');
 const SESSION_FILE = path.join(ROOT, 'SESSION.md');
-const TASKS_DIR    = path.join(ROOT, 'workflows', 'tasks');
-const DONE_DIR     = path.join(ROOT, 'workflows', 'done');
+const TASKS_DIR = path.join(ROOT, 'workflows', 'tasks');
+const DONE_DIR = path.join(ROOT, 'workflows', 'done');
 const VERSION_FILE = path.join(ROOT, 'VERSION');
-const PKG_FILE     = path.join(ROOT, 'package.json');
+const PKG_FILE = path.join(ROOT, 'package.json');
 
 function readVersion() {
   try {
     if (fs.existsSync(VERSION_FILE)) {
       return fs.readFileSync(VERSION_FILE, 'utf8').trim();
     }
-  } catch { /* fall through */ }
+  } catch {
+    /* fall through */
+  }
   try {
     if (fs.existsSync(PKG_FILE)) {
       const pkg = JSON.parse(fs.readFileSync(PKG_FILE, 'utf8'));
       if (pkg && pkg.version) return String(pkg.version);
     }
-  } catch { /* fall through */ }
+  } catch {
+    /* fall through */
+  }
   return null;
 }
 
 function getOpenTasks() {
   try {
-    return fs.readdirSync(TASKS_DIR)
-      .filter(f => f.endsWith('.md'))
+    return fs
+      .readdirSync(TASKS_DIR)
+      .filter((f) => f.endsWith('.md'))
       .sort()
-      .map(f => {
+      .map((f) => {
         const content = fs.readFileSync(path.join(TASKS_DIR, f), 'utf8');
         const m = content.match(/^title:\s*(.+)$/m);
         return `- \`${f}\` — ${m ? m[1].trim() : f}`;
       });
-  } catch { return []; }
+  } catch {
+    return [];
+  }
 }
 
 function getRecentDone(n = 7) {
   try {
-    return fs.readdirSync(DONE_DIR)
-      .filter(f => f.endsWith('.md'))
-      .sort().reverse().slice(0, n)
-      .map(f => {
+    return fs
+      .readdirSync(DONE_DIR)
+      .filter((f) => f.endsWith('.md'))
+      .sort()
+      .reverse()
+      .slice(0, n)
+      .map((f) => {
         const content = fs.readFileSync(path.join(DONE_DIR, f), 'utf8');
         const m = content.match(/^title:\s*(.+)$/m);
         return `- \`${f}\` — ${m ? m[1].trim() : f}`;
       });
-  } catch { return []; }
+  } catch {
+    return [];
+  }
 }
 
 // Preserve session notes if Claude has written them (i.e., not the placeholder)
@@ -71,23 +83,27 @@ function getExistingNotes() {
     if (m && m[1].trim() && !m[1].trim().startsWith('_Not yet written')) {
       return m[1].trim();
     }
-  } catch { /* file doesn't exist yet — first run */ }
+  } catch {
+    /* file doesn't exist yet — first run */
+  }
   return null;
 }
 
-const now           = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
-const version       = readVersion();
-const openTasks     = getOpenTasks();
-const recentDone    = getRecentDone();
+const now = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
+const version = readVersion();
+const openTasks = getOpenTasks();
+const recentDone = getRecentDone();
 const existingNotes = getExistingNotes();
 
-const notesContent = existingNotes || [
-  '_Not yet written. Claude: before ending a session, replace this with 2-4 bullets:_',
-  '_- What was accomplished this session_',
-  '_- Key decisions made (and brief rationale)_',
-  '_- What to pick up next_',
-  '_- Any open questions or blockers_',
-].join('\n');
+const notesContent =
+  existingNotes ||
+  [
+    '_Not yet written. Claude: before ending a session, replace this with 2-4 bullets:_',
+    '_- What was accomplished this session_',
+    '_- Key decisions made (and brief rationale)_',
+    '_- What to pick up next_',
+    '_- Any open questions or blockers_',
+  ].join('\n');
 
 const versionLine = version ? `**Version:** v${version}\n` : '';
 

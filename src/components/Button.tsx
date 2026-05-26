@@ -16,12 +16,10 @@ const StyledButton = styled.button<{ variant: ButtonVariant }>`
   padding: ${({ theme }) => `${theme.space(3)} ${theme.space(6)}`};
   border-radius: ${({ theme }) => theme.radii.md};
   border: 1px solid
-    ${({ theme, variant }) =>
-      variant === 'primary' ? theme.colors.accent : theme.colors.border};
+    ${({ theme, variant }) => (variant === 'primary' ? theme.colors.accent : theme.colors.border)};
   background: ${({ theme, variant }) =>
     variant === 'primary' ? theme.colors.accent : 'transparent'};
-  color: ${({ theme, variant }) =>
-    variant === 'primary' ? theme.colors.bg : theme.colors.fg};
+  color: ${({ theme, variant }) => (variant === 'primary' ? theme.colors.bg : theme.colors.fg)};
   cursor: pointer;
   font-weight: 500;
   transition: filter 150ms ease;
