@@ -1,0 +1,56 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+coverage/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+
+# production
+build/
+dist/
+
+# storybook
+storybook-static/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# os
+.DS_Store
+*.pem
+Thumbs.db
+
+# tools/ artifacts (project-local)
+tools/node_modules/
+tools/output/
+tools/.auth/
