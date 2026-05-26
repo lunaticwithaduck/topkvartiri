@@ -1,0 +1,16 @@
+{
+  "name": "topkvartiri-tools",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Pre-scaffold tooling: derive palette from topkvartiri.com and capture the boutiqueholiday-pirin.com design reference.",
+  "scripts": {
+    "palette": "node scripts/extract-palette.cjs",
+    "ref:crawl": "node scripts/crawl-reference.cjs",
+    "ref:capture": "node scripts/capture-reference.cjs",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "pngjs": "^7.0.0",
+    "playwright": "^1.49.0"
+  }
+}
