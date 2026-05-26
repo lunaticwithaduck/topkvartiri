@@ -7,6 +7,8 @@
     "palette": "node scripts/extract-palette.cjs",
     "ref:crawl": "node scripts/crawl-reference.cjs",
     "ref:capture": "node scripts/capture-reference.cjs",
+    "ref:mirror": "node scripts/mirror-reference.cjs",
+    "ref:serve": "node scripts/serve-mirror.cjs",
     "postinstall": "playwright install chromium"
   },
   "dependencies": {

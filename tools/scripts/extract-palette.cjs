@@ -29,11 +29,13 @@ const SNAP_DELTA_E = 8;              // perceptual "same color" threshold
 const VARIETY_DELTA_E = 10;          // min ΔE between picks in the final palette
 
 function parseArgs(argv) {
-  const out = { url: DEFAULT_URL, k: 10, top: 8 };
+  const out = { url: DEFAULT_URL, k: 10, top: 8, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
     if (a.startsWith('--url=')) out.url = a.slice(6);
     else if (a.startsWith('--k=')) out.k = Number(a.slice(4));
     else if (a.startsWith('--top=')) out.top = Number(a.slice(6));
+    else if (a === '--headed') out.headed = true;
+    else if (a.startsWith('--slowmo=')) out.slowmo = Number(a.slice(9));
   }
   return out;
 }
@@ -84,6 +86,7 @@ async function collectCssColors(page) {
       for (const prop of COLOR_PROPS) {
         const v = cs.getPropertyValue(prop).trim().toLowerCase();
         if (SKIP.has(v)) continue;
+        if (/,\s*0\s*\)\s*$/.test(v)) continue; // skip rgba(R,G,B,0) / hsla(...,0) — fully transparent variants
 
         let weight;
         if (prop === 'color') weight = Math.min(textLen, 500);          // text size proxy
@@ -155,16 +158,19 @@ function mergePalette(cssEntries, pixelClusters, { top }) {
   // Normalize CSS weights so they're comparable to pixel shares.
   const cssMaxWeight = cssEntries.reduce((m, e) => Math.max(m, e.totalWeight), 0) || 1;
 
-  // Parse CSS colors once.
+  // Parse CSS colors once. Drop fully transparent variants — they can't visually contribute,
+  // and they'd otherwise hijack pixel clusters via the Lab snap (which ignores alpha).
   const cssParsed = cssEntries
     .map((e) => {
       const c = parseColor(e.color);
-      if (!c) return null;
+      if (!c || c.a === 0) return null;
+      const opaque = { r: c.r, g: c.g, b: c.b, a: 1 };
       const lab = rgbToLab(c);
       return {
-        hex: toHex(c),
-        rgb: { r: c.r, g: c.g, b: c.b },
+        hex: toHex(opaque),
+        rgb: opaque,
         lab,
+        alpha: c.a,
         cssWeight: e.totalWeight / cssMaxWeight,
         cssCount: e.totalCount,
         props: e.props,
@@ -226,6 +232,7 @@ function mergePalette(cssEntries, pixelClusters, { top }) {
     pixelShare: Number(c.pixelShare.toFixed(4)),
     cssWeight: Number(c.cssWeight.toFixed(4)),
     cssCount: c.cssCount,
+    alpha: c.alpha ?? 1,
     appearsAs: Object.keys(c.props),
   }));
 }
@@ -280,15 +287,28 @@ async function run() {
   const screenshotName = 'topkvartiri-home.png';
   const screenshotPath = path.join(outDir, screenshotName);
 
-  console.log(`palette: launching chromium → ${args.url}`);
-  const browser = await chromium.launch();
+  console.log(`palette: launching chromium${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''} → ${args.url}`);
+  const browser = await chromium.launch({ headless: !args.headed, slowMo: args.slowmo });
   const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1 });
   const page = await context.newPage();
-  await page.goto(args.url, { waitUntil: 'networkidle', timeout: 60_000 }).catch(async () => {
-    console.warn('palette: networkidle timed out — falling back to load');
-    await page.waitForLoadState('load', { timeout: 30_000 });
-  });
-  await page.waitForTimeout(800);
+  try {
+    await page.goto(args.url, { waitUntil: 'load', timeout: 30_000 });
+  } catch {
+    // continue anyway — most failures here are long-lived assets we don't need
+  }
+  await page.waitForLoadState('networkidle', { timeout: 4_000 }).catch(() => {});
+  // Scroll to trigger lazy-loaded images so the screenshot captures the full visual
+  try {
+    await page.evaluate(async () => {
+      const distance = 500;
+      for (let y = 0; y < document.body.scrollHeight; y += distance) {
+        window.scrollTo(0, y);
+        await new Promise((r) => setTimeout(r, 80));
+      }
+      window.scrollTo(0, 0);
+    });
+  } catch {}
+  await page.waitForTimeout(500);
 
   console.log('palette: harvesting computed CSS colors');
   const cssData = await collectCssColors(page);

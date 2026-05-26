@@ -21,11 +21,13 @@ const SKIP_EXTENSIONS = /\.(pdf|jpg|jpeg|png|gif|svg|webp|zip|mp4|webm|mp3|css|j
 const SKIP_HASH = /#/;
 
 function parseArgs(argv) {
-  const out = { url: DEFAULT_URL, depth: DEFAULT_DEPTH, max: DEFAULT_MAX };
+  const out = { url: DEFAULT_URL, depth: DEFAULT_DEPTH, max: DEFAULT_MAX, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
     if (a.startsWith('--url=')) out.url = a.slice(6);
     else if (a.startsWith('--depth=')) out.depth = Number(a.slice(8));
     else if (a.startsWith('--max=')) out.max = Number(a.slice(6));
+    else if (a === '--headed') out.headed = true;
+    else if (a.startsWith('--slowmo=')) out.slowmo = Number(a.slice(9));
   }
   return out;
 }
@@ -51,8 +53,8 @@ async function run() {
   const outDir = path.resolve(__dirname, '..', 'output', 'reference');
   fs.mkdirSync(outDir, { recursive: true });
 
-  console.log(`crawl: seed ${args.url}, depth ${args.depth}, max ${args.max}`);
-  const browser = await chromium.launch();
+  console.log(`crawl: seed ${args.url}, depth ${args.depth}, max ${args.max}${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''}`);
+  const browser = await chromium.launch({ headless: !args.headed, slowMo: args.slowmo });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
 
@@ -65,16 +67,13 @@ async function run() {
 
     process.stdout.write(`crawl: [${visited.size + 1}/${args.max}] (d=${depth}) ${url} ... `);
     try {
-      await page.goto(url, { waitUntil: 'networkidle', timeout: NAV_TIMEOUT });
-    } catch (err) {
-      try {
-        await page.waitForLoadState('load', { timeout: 15_000 });
-      } catch {
-        process.stdout.write('skip (load failed)\n');
-        continue;
-      }
+      await page.goto(url, { waitUntil: 'load', timeout: NAV_TIMEOUT });
+    } catch {
+      process.stdout.write('skip (load failed)\n');
+      continue;
     }
-    await page.waitForTimeout(300);
+    await page.waitForLoadState('networkidle', { timeout: 3_000 }).catch(() => {});
+    await page.waitForTimeout(200);
 
     const title = (await page.title()).trim() || '(no title)';
     visited.set(url, { url, title, depth });
