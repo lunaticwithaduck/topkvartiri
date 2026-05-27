@@ -1,0 +1,7 @@
+# Convention linter — gates raw HTML, raw colors/font-sizes, and
+# misplaced next/link / next/font imports. See scripts/lint-conventions.cjs
+# for the rule set. Bypass with --no-verify only if you're really sure —
+# CI will run the same rules.
+
+pnpm lint:conventions
+pnpm typecheck

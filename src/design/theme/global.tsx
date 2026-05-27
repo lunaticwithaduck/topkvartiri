@@ -18,9 +18,11 @@ export function GlobalStyles() {
           padding: 0;
         }
         body {
-          font-family: ${theme.fonts.body};
-          color: ${theme.colors.fg};
-          background: ${theme.colors.bg};
+          font-family: ${theme.fontFamily.body};
+          font-size: ${theme.fontSize.base};
+          line-height: ${theme.lineHeight.normal};
+          color: ${theme.colors.text};
+          background: ${theme.colors.background};
           -webkit-font-smoothing: antialiased;
           text-rendering: optimizeLegibility;
         }
