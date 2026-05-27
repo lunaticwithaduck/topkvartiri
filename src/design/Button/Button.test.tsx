@@ -2,7 +2,7 @@ import { ThemeProvider } from '@emotion/react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { theme } from '@/lib/emotion/theme';
+import { theme } from '@/design/theme/theme';
 import { Button } from './Button';
 
 function renderWithTheme(ui: React.ReactNode) {

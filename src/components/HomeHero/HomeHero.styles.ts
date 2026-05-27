@@ -1,9 +1,5 @@
-'use client';
-
 import styled from '@emotion/styled';
 import { motion } from 'motion/react';
-import { useTranslations } from 'next-intl';
-import { Button } from './Button';
 
 const Section = styled.section`
   min-height: 80vh;
@@ -26,22 +22,6 @@ const Subtitle = styled.p`
   margin: 0 0 ${({ theme }) => theme.space(8)};
 `;
 
-export function HomeHero() {
-  const t = useTranslations('Home');
+const S = { Section, Title, Subtitle };
 
-  return (
-    <Section>
-      <div>
-        <Title
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {t('title')}
-        </Title>
-        <Subtitle>{t('subtitle')}</Subtitle>
-        <Button>{t('cta')}</Button>
-      </div>
-    </Section>
-  );
-}
+export default S;

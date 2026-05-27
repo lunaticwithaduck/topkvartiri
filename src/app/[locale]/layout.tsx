@@ -3,7 +3,7 @@ import { Jost } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
-import { Providers } from '@/components/Providers';
+import { Providers } from '@/components/Providers/Providers';
 import { routing } from '@/i18n/routing';
 
 const jost = Jost({
