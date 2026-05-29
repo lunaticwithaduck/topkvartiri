@@ -89,11 +89,42 @@ const rules = [
     hint: 'Route through <Button variant=… /> from @/design/Button/Button.',
   },
   {
-    name: 'R3: no raw <a href=> (use Link from @/i18n/navigation)',
-    pattern: /<a\s+[^>]*href=/,
+    // Only flag relative-path anchors. External links (http(s)://, mailto:,
+    // tel:) and JS-expression hrefs that resolve to external URLs legitimately
+    // need a raw <a> — the locale-aware Link is for internal routes only.
+    name: 'R3: no raw <a href="/…"> (use Link from @/i18n/navigation)',
+    pattern: /<a\s+[^>]*href=(?:"|')\//,
     skipFile: (p) => ALLOW_RAW_HTML.has(p),
     skipLine: () => false,
-    hint: 'Use <Link href={…} /> from @/i18n/navigation (next-intl locale-aware wrapper).',
+    hint: 'Use <Link href="/…" /> from @/i18n/navigation for internal routes. External URLs (http(s), mailto, tel) may use a raw <a>.',
+  },
+  {
+    name: 'R3: no raw <h1>–<h6> (use Text as="h1" / "h2" / …)',
+    pattern: /<h[1-6]\b/,
+    skipFile: (p) => ALLOW_RAW_HTML.has(p) || IS_TEST_OR_STORY(p),
+    skipLine: (line) => /^\s*\/\/|^\s*\*/.test(line),
+    hint: 'Use <Text as="h1"> (or h2…h6) from @/design/Text/Text.',
+  },
+  {
+    name: 'R3: no raw <p> (use Text as="p")',
+    pattern: /<p\b/,
+    skipFile: (p) => ALLOW_RAW_HTML.has(p) || IS_TEST_OR_STORY(p),
+    skipLine: (line) => /^\s*\/\/|^\s*\*/.test(line),
+    hint: 'Use <Text as="p"> from @/design/Text/Text for paragraph copy.',
+  },
+  {
+    name: 'R3: no raw <label> (use Text as="label")',
+    pattern: /<label\b/,
+    skipFile: (p) => ALLOW_RAW_HTML.has(p) || IS_TEST_OR_STORY(p),
+    skipLine: (line) => /^\s*\/\/|^\s*\*/.test(line),
+    hint: 'Use <Text as="label" htmlFor=…> from @/design/Text/Text.',
+  },
+  {
+    name: 'R3: no raw <img> (use Image primitive from @/design/Image/Image)',
+    pattern: /<img\b/,
+    skipFile: (p) => ALLOW_RAW_HTML.has(p) || IS_TEST_OR_STORY(p),
+    skipLine: (line) => /^\s*\/\/|^\s*\*|eslint-disable/.test(line),
+    hint: 'Use <Image src={…} alt="…" fill /> from @/design/Image/Image (wraps next/image).',
   },
   {
     name: 'R4: no hardcoded hex color',
