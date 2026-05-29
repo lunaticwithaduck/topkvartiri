@@ -1,16 +1,24 @@
 import styled from '@emotion/styled';
 import { motion } from 'motion/react';
 
-const Root = styled(motion.header)<{ $scrolled: boolean }>`
-  position: sticky;
+const Root = styled(motion.header)<{ $scrolled: boolean; $transparent: boolean }>`
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: ${({ theme }) => theme.zIndex.sticky};
   width: 100%;
-  background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.inverse};
-  box-shadow: ${({ $scrolled }) =>
-    $scrolled ? '0 6px 20px rgba(14, 30, 63, 0.28)' : '0 1px 0 rgba(0, 0, 0, 0.06)'};
-  transition: box-shadow 220ms ease;
+  background-color: ${({ $transparent }) =>
+    $transparent ? 'rgba(14, 30, 63, 0)' : 'rgba(14, 30, 63, 0.72)'};
+  backdrop-filter: ${({ $transparent }) => ($transparent ? 'none' : 'blur(14px) saturate(1.2)')};
+  -webkit-backdrop-filter: ${({ $transparent }) =>
+    $transparent ? 'none' : 'blur(14px) saturate(1.2)'};
+  border-block-end: 1px solid
+    ${({ $transparent }) => ($transparent ? 'transparent' : 'rgba(255, 255, 255, 0.1)')};
+  box-shadow: ${({ $scrolled }) => ($scrolled ? '0 8px 30px rgba(14, 30, 63, 0.28)' : 'none')};
+  /* Tween only cheap properties; let the blur snap on (masked by the fade) to avoid jank. */
+  transition: background-color 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
 `;
 
 const Inner = styled.div<{ $scrolled: boolean }>`
@@ -58,6 +66,7 @@ const Nav = styled.nav<{ $open: boolean }>`
     justify-content: center;
     padding: 0;
     border: 0;
+    background: transparent;
     gap: ${({ theme }) => theme.spacing[6]};
   }
 `;

@@ -38,6 +38,7 @@ export function SiteHeader() {
   return (
     <S.Root
       $scrolled={scrolled}
+      $transparent={!scrolled && !open}
       initial={reduce ? false : { y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 240, damping: 28 }}

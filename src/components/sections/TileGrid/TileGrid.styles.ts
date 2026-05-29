@@ -4,7 +4,7 @@ const Root = styled.div<{ $columns: 2 | 3 | 4 }>`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${({ theme }) => theme.spacing[3]};
-  max-width: 80rem;
+  max-width: 90rem;
   margin-inline: auto;
   padding: ${({ theme }) => `${theme.spacing[8]} ${theme.spacing[4]}`};
 
@@ -15,7 +15,7 @@ const Root = styled.div<{ $columns: 2 | 3 | 4 }>`
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     grid-template-columns: repeat(${({ $columns }) => $columns}, 1fr);
     gap: ${({ theme }) => theme.spacing[4]};
-    padding: ${({ theme }) => `${theme.spacing[12]} ${theme.spacing[8]}`};
+    padding: ${({ theme }) => `${theme.spacing[12]} ${theme.spacing[6]}`};
   }
 `;
 

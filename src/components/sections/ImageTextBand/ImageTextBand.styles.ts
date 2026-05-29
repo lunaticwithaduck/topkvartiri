@@ -6,14 +6,14 @@ const Root = styled.section<{ $reverse: boolean }>`
   grid-template-columns: 1fr;
   gap: ${({ theme }) => theme.spacing[6]};
   align-items: center;
-  max-width: 80rem;
+  max-width: 90rem;
   margin-inline: auto;
   padding: ${({ theme }) => `${theme.spacing[12]} ${theme.spacing[4]}`};
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     grid-template-columns: ${({ $reverse }) => ($reverse ? '5fr 7fr' : '7fr 5fr')};
     gap: ${({ theme }) => theme.spacing[16]};
-    padding: ${({ theme }) => `${theme.spacing[24]} ${theme.spacing[8]}`};
+    padding: ${({ theme }) => `${theme.spacing[24]} ${theme.spacing[6]}`};
 
     & > :first-of-type {
       order: ${({ $reverse }) => ($reverse ? 2 : 1)};

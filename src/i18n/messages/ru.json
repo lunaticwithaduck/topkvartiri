@@ -30,7 +30,10 @@
     "instagramHref": "https://instagram.com/",
     "policiesHeading": "Политики",
     "privacyPolicy": "Политика конфиденциальности",
-    "stayPolicy": "Условия проживания"
+    "stayPolicy": "Условия проживания",
+    "exploreHeading": "Разделы",
+    "ctaLabel": "Забронировать",
+    "rights": "© {year} Топ Квартиры. Все права защищены."
   },
   "Home": {
     "heroAlt": "Вид на горы из апартамента",

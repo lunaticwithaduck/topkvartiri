@@ -15,6 +15,7 @@ type TextProps = {
   tone?: 'default' | 'muted' | 'inverse' | 'accent' | 'primary';
   uppercase?: boolean;
   align?: 'left' | 'center' | 'right';
+  dropCap?: boolean;
   children: ReactNode;
   className?: string;
   htmlFor?: string;
@@ -46,6 +47,7 @@ export function Text({
   tone = 'default',
   uppercase = false,
   align = 'left',
+  dropCap = false,
   children,
   className,
   htmlFor,
@@ -61,6 +63,7 @@ export function Text({
       $tone={tone}
       $uppercase={uppercase}
       $align={align}
+      $dropCap={dropCap}
       className={className}
       {...(as === 'label' && htmlFor ? { htmlFor } : {})}
     >

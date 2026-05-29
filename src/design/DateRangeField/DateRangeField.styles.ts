@@ -46,27 +46,81 @@ const Popover = styled.div<{ $placement: 'top' | 'bottom' }>`
       : `top: calc(100% + ${theme.spacing[2]}); bottom: auto;`}
   left: 0;
   z-index: ${({ theme }) => theme.zIndex.dropdown};
+  color: ${({ theme }) => theme.colors.text};
   background: ${({ theme }) => theme.colors.paper};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.lg};
-  box-shadow: 0 18px 40px rgba(14, 30, 63, 0.18);
-  padding: ${({ theme }) => theme.spacing[3]};
+  box-shadow: 0 24px 60px rgba(14, 30, 63, 0.22);
+  padding: ${({ theme }) => theme.spacing[4]};
 
   .rdp-root {
-    --rdp-accent-color: ${({ theme }) => theme.colors.accent};
-    --rdp-accent-background-color: rgba(187, 155, 105, 0.16);
-    --rdp-today-color: ${({ theme }) => theme.colors.accent};
     --rdp-font-family: ${({ theme }) => theme.fontFamily.body};
+    --rdp-accent-color: ${({ theme }) => theme.colors.accent};
+    --rdp-accent-background-color: rgba(187, 155, 105, 0.14);
+    --rdp-day-width: 42px;
+    --rdp-day-height: 42px;
+    --rdp-day_button-width: 42px;
+    --rdp-day_button-height: 42px;
+    --rdp-day_button-border-radius: 9999px;
+    --rdp-today-color: ${({ theme }) => theme.colors.accent};
+    --rdp-range_start-color: ${({ theme }) => theme.colors.inverse};
+    --rdp-range_start-background: ${({ theme }) => theme.colors.accent};
+    --rdp-range_start-date-background-color: ${({ theme }) => theme.colors.accent};
+    --rdp-range_end-color: ${({ theme }) => theme.colors.inverse};
+    --rdp-range_end-background: ${({ theme }) => theme.colors.accent};
+    --rdp-range_end-date-background-color: ${({ theme }) => theme.colors.accent};
+    --rdp-range_middle-background-color: rgba(187, 155, 105, 0.16);
+    --rdp-range_middle-color: ${({ theme }) => theme.colors.text};
+    --rdp-disabled-opacity: 0.32;
+    --rdp-outside-opacity: 0.45;
+    color: ${({ theme }) => theme.colors.text};
     margin: 0;
   }
 
-  .rdp-selected .rdp-day_button {
-    color: ${({ theme }) => theme.colors.inverse};
-    font-weight: ${({ theme }) => theme.fontWeight.medium};
+  .rdp-months {
+    gap: ${({ theme }) => theme.spacing[6]};
   }
 
-  .rdp-range_middle .rdp-day_button {
+  .rdp-month_caption,
+  .rdp-caption_label {
     color: ${({ theme }) => theme.colors.text};
+    font-weight: ${({ theme }) => theme.fontWeight.medium};
+    font-size: ${({ theme }) => theme.fontSize.base};
+    letter-spacing: ${({ theme }) => theme.letterSpacing.wide};
+  }
+
+  .rdp-weekday {
+    color: ${({ theme }) => theme.colors.muted};
+    font-weight: ${({ theme }) => theme.fontWeight.medium};
+    font-size: ${({ theme }) => theme.fontSize.xs};
+    text-transform: uppercase;
+  }
+
+  .rdp-day_button {
+    color: ${({ theme }) => theme.colors.text};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    transition: background-color 140ms ease, color 140ms ease;
+  }
+
+  .rdp-day:not(.rdp-selected):not(.rdp-disabled) .rdp-day_button:hover {
+    background: rgba(187, 155, 105, 0.16);
+  }
+
+  .rdp-today:not(.rdp-selected) .rdp-day_button {
+    color: ${({ theme }) => theme.colors.accent};
+    font-weight: ${({ theme }) => theme.fontWeight.semibold};
+  }
+
+  .rdp-button_previous,
+  .rdp-button_next {
+    color: ${({ theme }) => theme.colors.accent};
+    border-radius: ${({ theme }) => theme.radius.full};
+    transition: background-color 140ms ease;
+  }
+
+  .rdp-button_previous:hover,
+  .rdp-button_next:hover {
+    background: rgba(187, 155, 105, 0.16);
   }
 `;
 

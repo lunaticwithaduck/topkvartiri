@@ -6,14 +6,14 @@ const Root = styled.header<{ $align: 'center' | 'left' }>`
   align-items: ${({ $align }) => ($align === 'left' ? 'flex-start' : 'center')};
   text-align: ${({ $align }) => ($align === 'left' ? 'left' : 'center')};
   gap: ${({ theme }) => theme.spacing[3]};
-  max-width: ${({ $align }) => ($align === 'left' ? '80rem' : '48rem')};
+  max-width: ${({ $align }) => ($align === 'left' ? '90rem' : '48rem')};
   width: 100%;
   margin-inline: auto;
   padding-inline: ${({ theme }) => theme.spacing[4]};
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
     gap: ${({ theme }) => theme.spacing[4]};
-    padding-inline: ${({ $align, theme }) => ($align === 'left' ? theme.spacing[8] : '0')};
+    padding-inline: ${({ $align, theme }) => ($align === 'left' ? theme.spacing[6] : '0')};
   }
 `;
 

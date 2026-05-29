@@ -30,7 +30,10 @@
     "instagramHref": "https://instagram.com/",
     "policiesHeading": "Policies",
     "privacyPolicy": "Privacy policy",
-    "stayPolicy": "Stay terms"
+    "stayPolicy": "Stay terms",
+    "exploreHeading": "Explore",
+    "ctaLabel": "Reserve your stay",
+    "rights": "© {year} Top Kvartiri. All rights reserved."
   },
   "Home": {
     "heroAlt": "Mountain view from an apartment",

@@ -11,6 +11,7 @@ export type TextStyleProps = {
   $tone: Tone;
   $uppercase: boolean;
   $align: 'left' | 'center' | 'right';
+  $dropCap: boolean;
 };
 
 const Root = styled.span<TextStyleProps>`
@@ -37,6 +38,17 @@ const Root = styled.span<TextStyleProps>`
         return theme.colors.text;
     }
   }};
+  ${({ $dropCap, theme }) =>
+    $dropCap
+      ? `&::first-letter {
+          float: left;
+          font-size: 3.1em;
+          line-height: 0.78;
+          padding-right: 0.08em;
+          font-weight: ${theme.fontWeight.light};
+          color: ${theme.colors.accent};
+        }`
+      : ''}
 `;
 
 const S = { Root };

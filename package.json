@@ -36,6 +36,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.0",
     "react-redux": "^9.2.0",
+    "webgl-fluid-enhanced": "^0.8.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {

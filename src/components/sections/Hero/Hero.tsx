@@ -3,6 +3,7 @@
 import { motion, useReducedMotion, type Variants } from 'motion/react';
 import type { ReactNode } from 'react';
 import { Image } from '@/design/Image/Image';
+import { KineticHeading } from '@/design/KineticHeading/KineticHeading';
 import { Text } from '@/design/Text/Text';
 import { animation } from '@/design/tokens/motion';
 import S from './Hero.styles';
@@ -64,6 +65,8 @@ export function Hero({
         </S.Media>
       </S.MediaClip>
       {hasContent ? <S.Scrim $compact={compact} /> : null}
+      <S.Grain aria-hidden />
+      <S.Sweep aria-hidden />
       {hasContent ? (
         <S.Content
           variants={reduce ? undefined : container}
@@ -80,19 +83,17 @@ export function Hero({
             </motion.div>
           ) : null}
           {title ? (
-            <motion.div variants={reduce ? undefined : item}>
-              <Text
-                as="h1"
-                size={compact ? undefined : 'hero'}
-                tone="inverse"
-                align="center"
-                uppercase
-                letterSpacing={compact ? 'wider' : 'wide'}
-                lineHeight="tight"
-              >
-                {title}
-              </Text>
-            </motion.div>
+            <Text
+              as="h1"
+              size={compact ? undefined : 'hero'}
+              tone="inverse"
+              align="center"
+              uppercase
+              letterSpacing={compact ? 'wider' : 'wide'}
+              lineHeight="tight"
+            >
+              <KineticHeading text={title} delay={0.25} />
+            </Text>
           ) : null}
           {subtitle ? (
             <motion.div variants={reduce ? undefined : item}>

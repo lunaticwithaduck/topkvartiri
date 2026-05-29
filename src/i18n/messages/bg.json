@@ -30,7 +30,10 @@
     "instagramHref": "https://instagram.com/",
     "policiesHeading": "Политики",
     "privacyPolicy": "Политика за лични данни",
-    "stayPolicy": "Условия за настаняване"
+    "stayPolicy": "Условия за настаняване",
+    "exploreHeading": "Разгледай",
+    "ctaLabel": "Резервирай престой",
+    "rights": "© {year} Топ Квартири. Всички права запазени."
   },
   "Home": {
     "heroAlt": "Изглед към планината от апартамент",

@@ -1,3 +1,4 @@
+import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 import { motion } from 'motion/react';
 
@@ -54,7 +55,8 @@ const Content = styled(motion.div)`
   justify-content: center;
   gap: ${({ theme }) => theme.spacing[4]};
   text-align: center;
-  padding: ${({ theme }) => `${theme.spacing[12]} ${theme.spacing[4]}`};
+  /* Extra top padding clears the fixed header on mobile, where the content is tall. */
+  padding: ${({ theme }) => `${theme.spacing[24]} ${theme.spacing[4]} ${theme.spacing[12]}`};
   color: ${({ theme }) => theme.colors.inverse};
 
   @media (min-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -78,6 +80,41 @@ const Eyebrow = styled.div`
   }
 `;
 
-const S = { Root, MediaClip, Media, Scrim, Content, Eyebrow };
+// Subtle film grain over the image for cinematic texture.
+const Grain = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+`;
+
+const sweep = keyframes`
+  0% { background-position: 220% 0; }
+  100% { background-position: -80% 0; }
+`;
+
+// Slow diagonal light sweep across the hero.
+const Sweep = styled.div`
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.16) 50%,
+    transparent 62%
+  );
+  background-size: 250% 100%;
+  animation: ${sweep} 14s linear infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`;
+
+const S = { Root, MediaClip, Media, Scrim, Content, Eyebrow, Grain, Sweep };
 
 export default S;

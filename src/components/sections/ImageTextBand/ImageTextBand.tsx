@@ -15,6 +15,10 @@ type ImageTextBandProps = {
   images: [ImageRef] | [ImageRef, ImageRef];
   reverse?: boolean;
   cta?: { label: string; href: string };
+  /** Render body as a larger, full-tone lede paragraph. */
+  lede?: boolean;
+  /** Gold drop cap on the first letter of the body. */
+  dropCap?: boolean;
   children?: ReactNode;
 };
 
@@ -25,6 +29,8 @@ export function ImageTextBand({
   images,
   reverse = false,
   cta,
+  lede = false,
+  dropCap = false,
   children,
 }: ImageTextBandProps) {
   const stacked = images.length === 2;
@@ -58,7 +64,13 @@ export function ImageTextBand({
         >
           {title}
         </Text>
-        <Text as="p" size="lg" tone="muted">
+        <Text
+          as="p"
+          size={lede ? 'xl' : 'lg'}
+          tone={lede ? 'default' : 'muted'}
+          lineHeight={lede ? 'relaxed' : 'normal'}
+          dropCap={dropCap}
+        >
           {body}
         </Text>
         {children}

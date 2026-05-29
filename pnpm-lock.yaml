@@ -53,6 +53,9 @@ importers:
       react-redux:
         specifier: ^9.2.0
         version: 9.3.0(@types/react@19.2.15)(react@19.2.6)(redux@5.0.1)
+      webgl-fluid-enhanced:
+        specifier: ^0.8.0
+        version: 0.8.0
       zod:
         specifier: ^4.0.0
         version: 4.4.3
@@ -4122,6 +4125,9 @@ packages:
   watchpack@2.5.1:
     resolution: {integrity: sha512-Zn5uXdcFNIA1+1Ei5McRd+iRzfhENPCe7LeABkJtNulSxjma+l7ltNx55BWZkRlwRnpOgHqxnjyaDgJnNXnqzg==}
     engines: {node: '>=10.13.0'}
+
+  webgl-fluid-enhanced@0.8.0:
+    resolution: {integrity: sha512-Yj3+AfQYC6bENe3mTpj1XExVfSZCG6pGxAqGXluUgdjCPCP8rvjrHXy4P5LChlJUgL8kf4E9dgmv5nLXjTJIAg==}
 
   webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
@@ -8334,6 +8340,8 @@ snapshots:
     dependencies:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
+
+  webgl-fluid-enhanced@0.8.0: {}
 
   webidl-conversions@7.0.0: {}
 

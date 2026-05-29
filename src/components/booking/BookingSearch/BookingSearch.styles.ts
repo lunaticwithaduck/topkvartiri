@@ -6,6 +6,8 @@ const Form = styled.form`
   grid-template-columns: 1fr;
   gap: ${({ theme }) => theme.spacing[4]};
   width: 100%;
+  /* Reset the cream text colour inherited from the hero content. */
+  color: ${({ theme }) => theme.colors.text};
   background: rgba(255, 252, 246, 0.86);
   backdrop-filter: blur(16px) saturate(1.1);
   -webkit-backdrop-filter: blur(16px) saturate(1.1);

@@ -4,6 +4,7 @@ import 'react-day-picker/style.css';
 import { format, parseISO } from 'date-fns';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { type DateRange, DayPicker } from 'react-day-picker';
+import { useBreakpoint } from '@/design/hooks/useMediaQuery';
 import { ChevronDown } from '@/design/Icon/icons';
 import S from './DateRangeField.styles';
 
@@ -14,6 +15,7 @@ type DateRangeFieldProps = {
   minDate?: string; // ISO yyyy-mm-dd
   invalid?: boolean;
   placeholder?: string;
+  /** Months to show. Defaults to 2 on desktop, 1 on mobile. */
   numberOfMonths?: number;
 };
 
@@ -28,8 +30,10 @@ export function DateRangeField({
   minDate,
   invalid = false,
   placeholder,
-  numberOfMonths = 1,
+  numberOfMonths,
 }: DateRangeFieldProps) {
+  const isWide = useBreakpoint('md');
+  const months = numberOfMonths ?? (isWide ? 2 : 1);
   const [open, setOpen] = useState(false);
   const [placement, setPlacement] = useState<'top' | 'bottom'>('bottom');
   const rootRef = useRef<HTMLDivElement>(null);
@@ -98,7 +102,7 @@ export function DateRangeField({
             selected={selected}
             onSelect={handleSelect}
             disabled={minD ? { before: minD } : undefined}
-            numberOfMonths={numberOfMonths}
+            numberOfMonths={months}
             weekStartsOn={1}
           />
         </S.Popover>

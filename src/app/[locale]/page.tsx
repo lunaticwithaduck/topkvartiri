@@ -1,11 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { HeroBooking } from '@/components/booking/HeroBooking/HeroBooking';
+import { Band } from '@/components/sections/Band/Band';
 import { ImageGridBand } from '@/components/sections/ImageGridBand/ImageGridBand';
 import { ImageTextBand } from '@/components/sections/ImageTextBand/ImageTextBand';
 import { SectionHeader } from '@/components/sections/SectionHeader/SectionHeader';
 import { StatementBand } from '@/components/sections/StatementBand/StatementBand';
 import { TileGrid } from '@/components/sections/TileGrid/TileGrid';
-import { Reveal } from '@/design/Reveal/Reveal';
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -23,8 +23,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         priority
       />
 
-      <Reveal>
+      <Band bg="default">
         <ImageTextBand
+          lede
           eyebrow={t('introEyebrow')}
           title={t('introTitle')}
           body={t('introBody')}
@@ -33,12 +34,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             { src: '/img/home-intro-2.jpg', alt: t('introImage2Alt') },
           ]}
         />
-      </Reveal>
+      </Band>
 
-      <Reveal>
+      <Band bg="elevated">
         <SectionHeader index="01" align="left" title={t('roomsTitle')} body={t('roomsBody')} />
-      </Reveal>
-      <Reveal>
         <ImageGridBand
           columns={3}
           tiles={[
@@ -63,9 +62,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           ]}
           footerCta={{ label: t('roomsCta'), href: '/accommodation' }}
         />
-      </Reveal>
+      </Band>
 
-      <Reveal>
+      <Band bg="default">
         <ImageTextBand
           reverse
           eyebrow={t('restaurantsEyebrow')}
@@ -74,7 +73,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           images={[{ src: '/img/restaurant.jpg', alt: t('restaurantsImageAlt') }]}
           cta={{ label: t('restaurantsCta'), href: '/services' }}
         />
-      </Reveal>
+      </Band>
 
       <StatementBand
         imageSrc="/img/hero-accommodation.jpg"
@@ -85,15 +84,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         cta={{ label: t('statement.cta'), href: '/activities' }}
       />
 
-      <Reveal>
+      <Band bg="default">
         <SectionHeader
           index="02"
           align="left"
           title={t('amenitiesTitle')}
           body={t('amenitiesBody')}
         />
-      </Reveal>
-      <Reveal>
         <ImageGridBand
           columns={4}
           tiles={[
@@ -124,27 +121,26 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           ]}
           footerCta={{ label: t('amenitiesCta'), href: '/services' }}
         />
-      </Reveal>
+      </Band>
 
-      <Reveal>
+      <Band bg="elevated">
         <ImageTextBand
+          dropCap
           eyebrow={t('longStayEyebrow')}
           title={t('longStayTitle')}
           body={t('longStayBody')}
           images={[{ src: '/img/long-stay.jpg', alt: t('longStayImageAlt') }]}
           cta={{ label: t('longStayCta'), href: '/prices' }}
         />
-      </Reveal>
+      </Band>
 
-      <Reveal>
+      <Band bg="default">
         <SectionHeader
           index="03"
           align="left"
           title={t('experiencesTitle')}
           body={t('experiencesBody')}
         />
-      </Reveal>
-      <Reveal>
         <TileGrid
           columns={4}
           tiles={[
@@ -180,7 +176,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             },
           ]}
         />
-      </Reveal>
+      </Band>
     </>
   );
 }
