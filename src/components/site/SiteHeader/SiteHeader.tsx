@@ -1,5 +1,6 @@
 'use client';
 
+import { useMotionValueEvent, useReducedMotion, useScroll } from 'motion/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Button } from '@/design/Button/Button';
@@ -24,12 +25,26 @@ export function SiteHeader() {
   const locale = useLocale();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const reduce = useReducedMotion();
+
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, 'change', (y) => {
+    setScrolled(y > 64);
+  });
+
+  const logoScale = reduce ? 1 : scrolled ? 0.85 : 1;
 
   return (
-    <S.Root>
-      <S.Inner>
+    <S.Root
+      $scrolled={scrolled}
+      initial={reduce ? false : { y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 240, damping: 28 }}
+    >
+      <S.Inner $scrolled={scrolled}>
         <Link href="/" aria-label={t('brandLabel')}>
-          <S.Brand>
+          <S.Brand animate={{ scale: logoScale }} transition={{ duration: 0.22, ease: 'easeOut' }}>
             <Image
               src="/logo-light.png"
               alt={t('brandLabel')}
@@ -47,6 +62,7 @@ export function SiteHeader() {
               <Link key={item.key} href={item.href} onClick={() => setOpen(false)}>
                 <S.NavItem as="span" aria-current={isActive ? 'page' : undefined}>
                   {t(`nav.${item.key}`)}
+                  {isActive ? <S.Underline layoutId="nav-underline" /> : null}
                 </S.NavItem>
               </Link>
             );
@@ -62,9 +78,12 @@ export function SiteHeader() {
           ))}
         </S.LangSwitch>
         <S.Actions>
-          <Button href={t('reserveHref')} external>
-            {t('reserveLabel')}
-          </Button>
+          <S.ReserveWrap
+            whileHover={reduce ? undefined : { scale: 1.04 }}
+            whileTap={reduce ? undefined : { scale: 0.97 }}
+          >
+            <Button href="/book">{t('reserveLabel')}</Button>
+          </S.ReserveWrap>
           <S.MenuButton
             type="button"
             aria-label={t(open ? 'closeMenuLabel' : 'openMenuLabel')}

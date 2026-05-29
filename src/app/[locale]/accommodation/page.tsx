@@ -27,7 +27,7 @@ export default async function AccommodationPage({
           { src: '/img/maisonette-1.jpg', alt: t('maisonetteImage1Alt') },
           { src: '/img/maisonette-2.jpg', alt: t('maisonetteImage2Alt') },
         ]}
-        cta={{ label: t('viewMore'), href: '/accommodation#maisonette' }}
+        cta={{ label: t('viewMore'), href: '/accommodation/maisonette' }}
       />
 
       <ImageTextBand
@@ -38,7 +38,7 @@ export default async function AccommodationPage({
           { src: '/img/studio-1.jpg', alt: t('studioImage1Alt') },
           { src: '/img/studio-2.jpg', alt: t('studioImage2Alt') },
         ]}
-        cta={{ label: t('viewMore'), href: '/accommodation#studio' }}
+        cta={{ label: t('viewMore'), href: '/accommodation/studio' }}
       />
 
       <ImageTextBand
@@ -48,7 +48,7 @@ export default async function AccommodationPage({
           { src: '/img/house-1.jpg', alt: t('houseImage1Alt') },
           { src: '/img/house-2.jpg', alt: t('houseImage2Alt') },
         ]}
-        cta={{ label: t('viewMore'), href: '/house' }}
+        cta={{ label: t('viewMore'), href: '/accommodation/house' }}
       />
     </>
   );

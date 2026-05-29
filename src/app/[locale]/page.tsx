@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Hero } from '@/components/sections/Hero/Hero';
+import { HeroBooking } from '@/components/booking/HeroBooking/HeroBooking';
 import { ImageGridBand } from '@/components/sections/ImageGridBand/ImageGridBand';
 import { ImageTextBand } from '@/components/sections/ImageTextBand/ImageTextBand';
 import { SectionHeader } from '@/components/sections/SectionHeader/SectionHeader';
@@ -12,7 +12,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      <Hero imageSrc="/img/hero-home.jpg" imageAlt={t('heroAlt')} priority />
+      <HeroBooking imageSrc="/img/hero-home.jpg" imageAlt={t('heroAlt')} priority />
 
       <ImageTextBand
         title={t('introTitle')}

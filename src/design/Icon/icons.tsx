@@ -38,6 +38,22 @@ export function ChevronDown(props: IconWrapperProps) {
   );
 }
 
+export function ChevronLeft(props: IconWrapperProps) {
+  return (
+    <Icon {...props}>
+      <path d="M15 6 L9 12 L15 18" />
+    </Icon>
+  );
+}
+
+export function ChevronRight(props: IconWrapperProps) {
+  return (
+    <Icon {...props}>
+      <path d="M9 6 L15 12 L9 18" />
+    </Icon>
+  );
+}
+
 export function Phone(props: IconWrapperProps) {
   return (
     <Icon {...props}>

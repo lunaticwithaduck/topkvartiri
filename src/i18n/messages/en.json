@@ -257,5 +257,173 @@
     "subtitle": "Aparthotel Sirena",
     "body": "Front row with a direct sea view. One bedroom, a comfortable sofa, and a terrace.",
     "virtualTitle": "Virtual tour"
+  },
+  "BookingSearch": {
+    "formLabel": "Booking search",
+    "accommodation": "Accommodation",
+    "arrival": "Arrival",
+    "departure": "Departure",
+    "guests": "Guests",
+    "adults": "Adults",
+    "children": "Children",
+    "reserve": "Reserve",
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "validation": {
+      "required": "Required",
+      "departureAfterArrival": "Departure must be after arrival"
+    },
+    "dates": "Dates",
+    "datesPlaceholder": "Select dates"
+  },
+  "Booking": {
+    "pageTitle": "Book your stay",
+    "pageSubtitle": "Choose your dates, room and extras — confirmation in four quick steps.",
+    "stepsLabel": "Booking steps",
+    "steps": {
+      "dates": "Dates",
+      "room": "Room",
+      "extras": "Extras",
+      "confirm": "Confirmation"
+    },
+    "stepHints": {
+      "dates": "When are you staying, and how many guests?",
+      "room": "Pick the accommodation that fits you best.",
+      "extras": "Add optional extras to your stay.",
+      "confirm": "Your details — no payment is taken in this demo."
+    },
+    "fields": {
+      "accommodation": "Accommodation",
+      "guests": "Guests",
+      "adults": "Adults",
+      "children": "Children",
+      "arrival": "Arrival",
+      "departure": "Departure",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "phone": "Phone",
+      "country": "Country",
+      "countryPlaceholder": "Select a country",
+      "notes": "Notes",
+      "notesHint": "Optional — special requests, arrival time, etc.",
+      "consent": "I agree to the privacy policy and booking terms.",
+      "dates": "Dates",
+      "datesPlaceholder": "Select dates"
+    },
+    "decrease": "Decrease",
+    "increase": "Increase",
+    "rooms": {
+      "maisonette": {
+        "name": "Maisonette",
+        "desc": "Two-level apartment with a private terrace."
+      },
+      "studio": {
+        "name": "Studio",
+        "desc": "Cosy studio for two, with a kitchenette."
+      },
+      "house": {
+        "name": "Guest house",
+        "desc": "Standalone house with a garden, sleeps six."
+      }
+    },
+    "room": {
+      "capacity": "Up to {count} guests",
+      "perNight": "{price} / night"
+    },
+    "extras": {
+      "breakfast": {
+        "name": "Breakfast",
+        "desc": "Daily continental breakfast."
+      },
+      "spa": {
+        "name": "Spa access",
+        "desc": "Wellness & pool for your stay."
+      },
+      "lateCheckout": {
+        "name": "Late checkout",
+        "desc": "Check out at 2 pm."
+      },
+      "airportTransfer": {
+        "name": "Airport transfer",
+        "desc": "Private round-trip transfer."
+      },
+      "cot": {
+        "name": "Baby cot",
+        "desc": "Complimentary on request."
+      },
+      "included": "Included"
+    },
+    "countries": {
+      "BG": "Bulgaria",
+      "RU": "Russia",
+      "GB": "United Kingdom",
+      "DE": "Germany",
+      "GR": "Greece",
+      "RO": "Romania",
+      "OTHER": "Other"
+    },
+    "summary": {
+      "title": "Your stay",
+      "accommodation": "Accommodation",
+      "dates": "Dates",
+      "guests": "Guests",
+      "guestsValue": "{adults} adults · {children} children",
+      "nights": "{nights} nights",
+      "extras": "Extras",
+      "total": "Total"
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Enter a valid email",
+      "phone": "Enter a valid phone number",
+      "consent": "Please accept to continue",
+      "selectRoom": "Please select a room",
+      "departureAfterArrival": "Departure must be after arrival"
+    },
+    "actions": {
+      "back": "Back",
+      "next": "Continue",
+      "confirm": "Confirm booking"
+    },
+    "success": {
+      "title": "Booking confirmed",
+      "body": "A confirmation has been sent to {email}.",
+      "reference": "Reference",
+      "total": "Total: {price}",
+      "home": "Back to home"
+    }
+  },
+  "AccommodationDetail": {
+    "eyebrow": "Accommodation",
+    "gallery": "Gallery",
+    "aboutTitle": "About this place",
+    "description": {
+      "maisonette": "A bright two-level maisonette with a private terrace, full kitchen and room for the whole family. Quiet location, minutes from the centre.",
+      "studio": "A cosy, light-filled studio for two with a well-equipped kitchenette — perfect for a short city escape.",
+      "house": "A spacious standalone guest house with a garden, several bedrooms and room for six. Ideal for families and groups."
+    },
+    "amenitiesTitle": "Amenities",
+    "amenities": {
+      "wifi": "Free Wi-Fi",
+      "kitchen": "Kitchen",
+      "parking": "Free parking",
+      "terrace": "Terrace",
+      "ac": "Air conditioning",
+      "tv": "Smart TV",
+      "pool": "Pool access",
+      "heating": "Heating",
+      "petFriendly": "Pet friendly"
+    },
+    "capacity": "Sleeps {count}",
+    "perNight": "{price} / night",
+    "bookCta": "Book this stay",
+    "viewDetails": "View details",
+    "notFound": "Accommodation not found",
+    "lightbox": {
+      "close": "Close",
+      "prev": "Previous image",
+      "next": "Next image"
+    }
   }
 }

@@ -1,34 +1,41 @@
 import styled from '@emotion/styled';
+import { motion } from 'motion/react';
 
-const Root = styled.header`
+const Root = styled(motion.header)<{ $scrolled: boolean }>`
   position: sticky;
   top: 0;
   z-index: ${({ theme }) => theme.zIndex.sticky};
   width: 100%;
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.inverse};
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  box-shadow: ${({ $scrolled }) =>
+    $scrolled ? '0 6px 20px rgba(14, 30, 63, 0.28)' : '0 1px 0 rgba(0, 0, 0, 0.06)'};
+  transition: box-shadow 220ms ease;
 `;
 
-const Inner = styled.div`
+const Inner = styled.div<{ $scrolled: boolean }>`
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: ${({ theme }) => theme.spacing[3]};
   max-width: 80rem;
   margin-inline: auto;
-  padding: ${({ theme }) => `${theme.spacing[3]} ${theme.spacing[4]}`};
+  padding: ${({ theme, $scrolled }) =>
+    `${$scrolled ? theme.spacing[2] : theme.spacing[3]} ${theme.spacing[4]}`};
+  transition: padding 220ms ease;
 
   @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
     grid-template-columns: auto 1fr auto auto;
     gap: ${({ theme }) => theme.spacing[6]};
-    padding: ${({ theme }) => `${theme.spacing[4]} ${theme.spacing[8]}`};
+    padding: ${({ theme, $scrolled }) =>
+      `${$scrolled ? theme.spacing[3] : theme.spacing[5]} ${theme.spacing[8]}`};
   }
 `;
 
-const Brand = styled.div`
+const Brand = styled(motion.div)`
   display: flex;
   align-items: center;
+  transform-origin: left center;
   padding-inline: ${({ theme }) => theme.spacing[1]};
 `;
 
@@ -56,6 +63,7 @@ const Nav = styled.nav<{ $open: boolean }>`
 `;
 
 const NavItem = styled.a`
+  position: relative;
   display: inline-flex;
   align-items: center;
   padding: ${({ theme }) => `${theme.spacing[2]} ${theme.spacing[1]}`};
@@ -72,10 +80,24 @@ const NavItem = styled.a`
   }
 `;
 
+const Underline = styled(motion.span)`
+  position: absolute;
+  left: ${({ theme }) => theme.spacing[1]};
+  right: ${({ theme }) => theme.spacing[1]};
+  bottom: 2px;
+  height: 2px;
+  border-radius: ${({ theme }) => theme.radius.full};
+  background: ${({ theme }) => theme.colors.accent};
+`;
+
 const Actions = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing[2]};
+`;
+
+const ReserveWrap = styled(motion.div)`
+  display: inline-flex;
 `;
 
 const MenuButton = styled.button`
@@ -122,7 +144,9 @@ const S = {
   Brand,
   Nav,
   NavItem,
+  Underline,
   Actions,
+  ReserveWrap,
   MenuButton,
   LangSwitch,
   LangLink,

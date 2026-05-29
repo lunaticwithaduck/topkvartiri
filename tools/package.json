@@ -9,6 +9,7 @@
     "ref:capture": "node scripts/capture-reference.cjs",
     "ref:mirror": "node scripts/mirror-reference.cjs",
     "ref:serve": "node scripts/serve-mirror.cjs",
+    "quendoo:capture": "node scripts/capture-quendoo.cjs",
     "postinstall": "playwright install chromium"
   },
   "dependencies": {
