@@ -22,6 +22,7 @@ const Root = styled.span<TextStyleProps>`
   letter-spacing: ${({ theme, $letterSpacing }) => theme.letterSpacing[$letterSpacing]};
   text-align: ${({ $align }) => $align};
   text-transform: ${({ $uppercase }) => ($uppercase ? 'uppercase' : 'none')};
+  text-wrap: pretty;
   color: ${({ theme, $tone }) => {
     switch ($tone) {
       case 'muted':

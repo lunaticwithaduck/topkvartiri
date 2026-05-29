@@ -36,7 +36,12 @@ const ButtonRoot = styled.button<{ $variant: ButtonVariant }>`
   ${({ $variant, theme }) => rootCss($variant)(theme)}
 `;
 
-const AnchorRoot = styled.a<{ $variant: ButtonVariant }>`
+// Rendered with `as={Link}` (a component), so Emotion's automatic `$`-prop
+// filtering for DOM tags doesn't apply — filter explicitly so `$variant`
+// doesn't leak onto the <a> and cause a hydration mismatch.
+const AnchorRoot = styled('a', {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{ $variant: ButtonVariant }>`
   ${({ $variant, theme }) => rootCss($variant)(theme)}
 `;
 

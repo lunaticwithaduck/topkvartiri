@@ -11,15 +11,23 @@ const Root = styled.div<CardStyleProps>`
   background: ${({ theme }) => theme.colors.background};
   border-radius: ${({ theme }) => theme.radius.sm};
   overflow: hidden;
-  transition: transform 250ms ease, box-shadow 250ms ease;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: ${({ $variant }) => ($variant === 'media' ? '0 1px 3px rgba(0,0,0,0.08)' : 'none')};
+
+  & img {
+    transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
   ${({ $hover }) =>
     $hover &&
     `
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
+      box-shadow: 0 18px 40px rgba(14,30,63,0.16);
+    }
+    &:hover img {
+      transform: scale(1.05);
     }
   `}
 `;

@@ -2,7 +2,7 @@
 
 import 'react-day-picker/style.css';
 import { format, parseISO } from 'date-fns';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { type DateRange, DayPicker } from 'react-day-picker';
 import { ChevronDown } from '@/design/Icon/icons';
 import S from './DateRangeField.styles';
@@ -31,7 +31,19 @@ export function DateRangeField({
   numberOfMonths = 1,
 }: DateRangeFieldProps) {
   const [open, setOpen] = useState(false);
+  const [placement, setPlacement] = useState<'top' | 'bottom'>('bottom');
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // Open upward when there isn't room for the calendar below the trigger.
+  useLayoutEffect(() => {
+    if (!open) return;
+    const rect = triggerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const POPOVER_HEIGHT = 380;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    setPlacement(spaceBelow < POPOVER_HEIGHT && rect.top > spaceBelow ? 'top' : 'bottom');
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -68,6 +80,7 @@ export function DateRangeField({
   return (
     <S.Root ref={rootRef}>
       <S.Trigger
+        ref={triggerRef}
         type="button"
         $invalid={invalid}
         aria-haspopup="dialog"
@@ -79,7 +92,7 @@ export function DateRangeField({
         <ChevronDown size={18} />
       </S.Trigger>
       {open ? (
-        <S.Popover role="dialog" aria-label={placeholder}>
+        <S.Popover role="dialog" aria-label={placeholder} $placement={placement}>
           <DayPicker
             mode="range"
             selected={selected}

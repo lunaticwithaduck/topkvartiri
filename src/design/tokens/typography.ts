@@ -12,6 +12,10 @@ export const fontSize = {
   '3xl': '1.875rem', // 30px — heading 3
   '4xl': '2.25rem', // 36px — heading 2
   '5xl': '2.5rem', // 40px — heading 1
+  // Editorial display sizes — fluid, for section openers and the home hero.
+  // Off the fixed reference ladder on purpose: cinematic scale needs to breathe.
+  display: 'clamp(2.25rem, 5vw, 3.5rem)', // ~36 → 56px — editorial section titles
+  hero: 'clamp(2.75rem, 7vw, 5rem)', // ~44 → 80px — hero headline
 } as const;
 
 // Reference uses 400 for body, 500 for small caps labels, 300 for display

@@ -28,37 +28,66 @@ const Tile = styled.a`
   border-radius: ${({ theme }) => theme.radius.sm};
   text-decoration: none;
   cursor: pointer;
-  transition: transform 250ms ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
 
   & > img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 400ms ease;
+    transition: transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   &:hover > img {
-    transform: scale(1.04);
+    transform: scale(1.07);
   }
 `;
 
 const Scrim = styled.div`
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.65) 100%);
   pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(14, 30, 63, 0) 30%,
+    rgba(14, 30, 63, 0.4) 70%,
+    rgba(14, 30, 63, 0.82) 100%
+  );
+  transition: opacity 500ms ease;
+
+  ${Tile}:hover & {
+    opacity: 0.92;
+  }
 `;
 
 const Caption = styled.div`
   position: absolute;
   inset-inline: 0;
   inset-block-end: 0;
-  padding: ${({ theme }) => theme.spacing[4]};
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing[2]};
+  padding: ${({ theme }) => theme.spacing[5]};
   color: ${({ theme }) => theme.colors.inverse};
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Gold hairline that rises in above the caption on hover. */
+  &::before {
+    content: '';
+    width: 32px;
+    height: 2px;
+    background: ${({ theme }) => theme.colors.accent};
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 500ms ease, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  ${Tile}:hover & {
+    transform: translateY(-4px);
+  }
+
+  ${Tile}:hover &::before {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const S = { Root, Tile, Scrim, Caption };

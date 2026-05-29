@@ -34,7 +34,9 @@ export function ImageTextBand({
       <S.MediaColumn $stacked={stacked}>
         {images.map((img) => (
           <S.MediaTile key={img.src} $aspectRatio={stacked ? '3 / 4' : '4 / 3'}>
-            <Image src={img.src} alt={img.alt} fill sizes="(min-width: 768px) 50vw, 100vw" />
+            <S.ParallaxLayer amount={0.06}>
+              <Image src={img.src} alt={img.alt} fill sizes="(min-width: 768px) 50vw, 100vw" />
+            </S.ParallaxLayer>
           </S.MediaTile>
         ))}
       </S.MediaColumn>
@@ -46,10 +48,17 @@ export function ImageTextBand({
             </Text>
           </S.Eyebrow>
         ) : null}
-        <Text as="h2" uppercase letterSpacing="wider">
+        <Text
+          as="h2"
+          size="display"
+          weight="light"
+          uppercase
+          letterSpacing="wide"
+          lineHeight="tight"
+        >
           {title}
         </Text>
-        <Text as="p" tone="muted">
+        <Text as="p" size="lg" tone="muted">
           {body}
         </Text>
         {children}

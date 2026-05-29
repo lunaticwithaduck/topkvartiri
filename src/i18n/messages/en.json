@@ -34,6 +34,10 @@
   },
   "Home": {
     "heroAlt": "Mountain view from an apartment",
+    "heroEyebrow": "Bansko · Pirin Mountains",
+    "heroTitle": "Wake up to the mountains",
+    "heroSubtitle": "Boutique apartments and houses for a slower kind of escape.",
+    "introEyebrow": "The stay",
     "introTitle": "Comfort and style in the heart of the mountain",
     "introBody": "Our apartments and studios blend warm interiors with modern essentials so every stay feels right.",
     "introImage1Alt": "Bright living room",
@@ -52,6 +56,7 @@
       "houseAlt": "House exterior"
     },
     "roomsCta": "See all",
+    "restaurantsEyebrow": "Taste",
     "restaurantsTitle": "Restaurants & bars",
     "restaurantsBody": "A varied selection of venues for every part of the day, from breakfast to a late-evening menu.",
     "restaurantsImageAlt": "Restaurant table",
@@ -73,6 +78,7 @@
       "kidsAlt": "Kids' area"
     },
     "amenitiesCta": "See all",
+    "longStayEyebrow": "Stay longer",
     "longStayTitle": "Long-term rental",
     "longStayBody": "Monthly terms for people who want to live near the mountain at a slower pace.",
     "longStayCta": "See prices",
@@ -90,6 +96,13 @@
       "horsesAlt": "Riding stable",
       "skiCaption": "Ski",
       "skiAlt": "Ski slope"
+    },
+    "statement": {
+      "eyebrow": "A sense of place",
+      "title": "Where the silence is the luxury",
+      "body": "Pine air, first snow, and the slow gold of late afternoon — the mountain sets the pace, and we simply make room for it.",
+      "cta": "Explore the surroundings",
+      "imageAlt": "Mountain chalets nestled below the Pirin peaks"
     }
   },
   "Accommodation": {

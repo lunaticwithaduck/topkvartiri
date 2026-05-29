@@ -38,9 +38,12 @@ const TriggerText = styled.span<{ $placeholder: boolean }>`
   color: ${({ theme, $placeholder }) => ($placeholder ? theme.colors.muted : theme.colors.text)};
 `;
 
-const Popover = styled.div`
+const Popover = styled.div<{ $placement: 'top' | 'bottom' }>`
   position: absolute;
-  top: calc(100% + ${({ theme }) => theme.spacing[2]});
+  ${({ $placement, theme }) =>
+    $placement === 'top'
+      ? `bottom: calc(100% + ${theme.spacing[2]}); top: auto;`
+      : `top: calc(100% + ${theme.spacing[2]}); bottom: auto;`}
   left: 0;
   z-index: ${({ theme }) => theme.zIndex.dropdown};
   background: ${({ theme }) => theme.colors.paper};
