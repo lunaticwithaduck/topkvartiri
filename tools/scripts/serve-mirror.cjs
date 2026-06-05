@@ -8,9 +8,17 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadToolingConfig, resolveConfiguredPath } = require('./lib/tooling-config.cjs');
 
-const root = path.resolve(__dirname, '..', 'output', 'reference', 'mirror');
-const port = Number(process.env.PORT) || 4173;
+function parseArgs(argv) {
+  const out = { config: process.env.TOOLING_CONFIG || null, root: null, port: Number(process.env.PORT) || 4173 };
+  for (const a of argv.slice(2)) {
+    if (a.startsWith('--config=')) out.config = a.slice(9);
+    else if (a.startsWith('--root=')) out.root = path.resolve(a.slice(7));
+    else if (a.startsWith('--port=')) out.port = Number(a.slice(7));
+  }
+  return out;
+}
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -58,54 +66,66 @@ function send(file, res) {
   stream.pipe(res);
 }
 
-const server = http.createServer((req, res) => {
-  try {
-    let pathname = decodeURIComponent(req.url.split('?')[0]);
-    // Index fallback
-    if (pathname === '/' || pathname === '') pathname = '/_index.html';
+function startServer(root, port) {
+  const server = http.createServer((req, res) => {
+    try {
+      let pathname = decodeURIComponent(req.url.split('?')[0]);
+      // Index fallback
+      if (pathname === '/' || pathname === '') pathname = '/_index.html';
 
-    let file = safeJoin(root, pathname);
-    if (!file) {
-      res.statusCode = 403;
-      res.end('forbidden');
-      return;
-    }
+      let file = safeJoin(root, pathname);
+      if (!file) {
+        res.statusCode = 403;
+        res.end('forbidden');
+        return;
+      }
 
-    fs.stat(file, (err, stats) => {
-      if (err) {
-        // Try directory index
-        if (pathname.endsWith('/')) {
-          const dirIndex = safeJoin(root, pathname + 'index.html');
+      fs.stat(file, (err, stats) => {
+        if (err) {
+          // Try directory index
+          if (pathname.endsWith('/')) {
+            const dirIndex = safeJoin(root, pathname + 'index.html');
+            if (dirIndex) return fs.stat(dirIndex, (e2, s2) => {
+              if (!e2 && s2.isFile()) send(dirIndex, res);
+              else { res.statusCode = 404; res.end('not found: ' + pathname); }
+            });
+          }
+          const dirIndex = safeJoin(root, pathname + '/index.html');
           if (dirIndex) return fs.stat(dirIndex, (e2, s2) => {
             if (!e2 && s2.isFile()) send(dirIndex, res);
             else { res.statusCode = 404; res.end('not found: ' + pathname); }
           });
+          res.statusCode = 404;
+          res.end('not found: ' + pathname);
+          return;
         }
-        const dirIndex = safeJoin(root, pathname + '/index.html');
-        if (dirIndex) return fs.stat(dirIndex, (e2, s2) => {
-          if (!e2 && s2.isFile()) send(dirIndex, res);
-          else { res.statusCode = 404; res.end('not found: ' + pathname); }
-        });
-        res.statusCode = 404;
-        res.end('not found: ' + pathname);
-        return;
-      }
-      if (stats.isDirectory()) {
-        const dirIndex = path.join(file, 'index.html');
-        return fs.stat(dirIndex, (e2, s2) => {
-          if (!e2 && s2.isFile()) send(dirIndex, res);
-          else { res.statusCode = 404; res.end('directory has no index.html'); }
-        });
-      }
-      send(file, res);
-    });
-  } catch (err) {
-    res.statusCode = 500;
-    res.end('error: ' + err.message);
-  }
-});
+        if (stats.isDirectory()) {
+          const dirIndex = path.join(file, 'index.html');
+          return fs.stat(dirIndex, (e2, s2) => {
+            if (!e2 && s2.isFile()) send(dirIndex, res);
+            else { res.statusCode = 404; res.end('directory has no index.html'); }
+          });
+        }
+        send(file, res);
+      });
+    } catch (err) {
+      res.statusCode = 500;
+      res.end('error: ' + err.message);
+    }
+  });
 
-server.listen(port, () => {
-  console.log(`serve: ${root}`);
-  console.log(`serve: http://localhost:${port}/_index.html`);
-});
+  server.listen(port, () => {
+    console.log(`serve: ${root}`);
+    console.log(`serve: http://localhost:${port}/_index.html`);
+  });
+}
+
+function run() {
+  const args = parseArgs(process.argv);
+  const { config, rootDir } = loadToolingConfig(args.config);
+  const referenceConfig = config.reference ?? {};
+  const root = args.root ?? resolveConfiguredPath(rootDir, referenceConfig.mirrorDir ?? 'output/reference/mirror');
+  startServer(root, args.port);
+}
+
+run();

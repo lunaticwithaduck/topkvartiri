@@ -1,0 +1,19 @@
+{
+  "projectName": "topkvartiri",
+  "palette": {
+    "url": "https://www.topkvartiri.com/",
+    "outputDir": "output/palette",
+    "screenshotName": "topkvartiri-home.png",
+    "htmlTitle": "topkvartiri palette"
+  },
+  "reference": {
+    "url": "https://boutiqueholiday-pirin.com/",
+    "outputDir": "output/reference",
+    "routesFile": "output/reference/routes.json",
+    "mirrorDir": "output/reference/mirror"
+  },
+  "quendoo": {
+    "url": "https://booking.quendoo.com/fe-bookings-mp/boutique-holiday-MqrPnFoLOC/",
+    "outputDir": "output/quendoo"
+  }
+}

@@ -19,15 +19,16 @@
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadToolingConfig, resolveConfiguredPath } = require('./lib/tooling-config.cjs');
 
-const DEFAULT_ROUTES = path.resolve(__dirname, '..', 'output', 'reference', 'routes.json');
 const NAV_TIMEOUT = 30_000;
 const VIEWPORT = { width: 1440, height: 900 };
 
 function parseArgs(argv) {
-  const out = { routes: DEFAULT_ROUTES, headed: false, slowmo: 0 };
+  const out = { config: null, routes: null, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
-    if (a.startsWith('--routes=')) out.routes = path.resolve(a.slice(9));
+    if (a.startsWith('--config=')) out.config = a.slice(9);
+    else if (a.startsWith('--routes=')) out.routes = path.resolve(a.slice(9));
     else if (a === '--headed') out.headed = true;
     else if (a.startsWith('--slowmo=')) out.slowmo = Number(a.slice(9));
   }
@@ -172,18 +173,21 @@ a:hover { text-decoration: underline; }
 
 async function run() {
   const args = parseArgs(process.argv);
-  if (!fs.existsSync(args.routes)) {
-    console.error(`mirror: routes file not found: ${args.routes}`);
+  const { config, rootDir } = loadToolingConfig(args.config);
+  const referenceConfig = config.reference ?? {};
+  const routesPath = args.routes ?? resolveConfiguredPath(rootDir, referenceConfig.routesFile ?? 'output/reference/routes.json');
+  if (!fs.existsSync(routesPath)) {
+    console.error(`mirror: routes file not found: ${routesPath}`);
     process.exit(2);
   }
-  const routesFile = JSON.parse(fs.readFileSync(args.routes, 'utf8'));
+  const routesFile = JSON.parse(fs.readFileSync(routesPath, 'utf8'));
   const routes = routesFile.routes || [];
   if (!routes.length) {
     console.error('mirror: routes file is empty');
     process.exit(2);
   }
   const seedOrigin = new URL(routesFile.seed).origin;
-  const mirrorDir = path.resolve(__dirname, '..', 'output', 'reference', 'mirror');
+  const mirrorDir = resolveConfiguredPath(rootDir, referenceConfig.mirrorDir ?? 'output/reference/mirror');
   fs.mkdirSync(mirrorDir, { recursive: true });
 
   console.log(`mirror: ${routes.length} routes from ${seedOrigin}${args.headed ? ' (headed)' : ''}`);

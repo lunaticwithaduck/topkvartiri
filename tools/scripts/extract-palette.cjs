@@ -21,17 +21,18 @@ const path = require('node:path');
 
 const { parseColor, toHex, rgbToLab, deltaE, classifyRole } = require('./lib/color.cjs');
 const { kmeans } = require('./lib/kmeans.cjs');
+const { loadToolingConfig, resolveConfiguredPath } = require('./lib/tooling-config.cjs');
 
-const DEFAULT_URL = 'https://www.topkvartiri.com/';
 const VIEWPORT = { width: 1440, height: 900 };
 const PIXEL_SAMPLES_TARGET = 30_000; // ~30k Lab points → k-means converges in <1s
 const SNAP_DELTA_E = 8;              // perceptual "same color" threshold
 const VARIETY_DELTA_E = 10;          // min ΔE between picks in the final palette
 
 function parseArgs(argv) {
-  const out = { url: DEFAULT_URL, k: 10, top: 8, headed: false, slowmo: 0 };
+  const out = { config: null, url: null, k: 10, top: 8, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
-    if (a.startsWith('--url=')) out.url = a.slice(6);
+    if (a.startsWith('--config=')) out.config = a.slice(9);
+    else if (a.startsWith('--url=')) out.url = a.slice(6);
     else if (a.startsWith('--k=')) out.k = Number(a.slice(4));
     else if (a.startsWith('--top=')) out.top = Number(a.slice(6));
     else if (a === '--headed') out.headed = true;
@@ -237,7 +238,7 @@ function mergePalette(cssEntries, pixelClusters, { top }) {
   }));
 }
 
-function paletteHtml({ url, palette, screenshotName }) {
+function paletteHtml({ title, url, palette, screenshotName }) {
   const swatches = palette
     .map((c, i) => `
       <div class="swatch">
@@ -254,7 +255,7 @@ function paletteHtml({ url, palette, screenshotName }) {
     `)
     .join('');
   return `<!doctype html>
-<html><head><meta charset="utf-8"><title>topkvartiri palette</title>
+<html><head><meta charset="utf-8"><title>${title}</title>
 <style>
   body { font: 14px/1.4 system-ui, sans-serif; padding: 24px; background: #f7f7f7; color: #222; }
   h1 { font-size: 18px; margin: 0 0 4px; }
@@ -282,17 +283,25 @@ function paletteHtml({ url, palette, screenshotName }) {
 
 async function run() {
   const args = parseArgs(process.argv);
-  const outDir = path.resolve(__dirname, '..', 'output', 'palette');
+  const { config, rootDir } = loadToolingConfig(args.config);
+  const paletteConfig = config.palette ?? {};
+  const url = args.url ?? paletteConfig.url;
+  if (!url) {
+    throw new Error('palette url is required via tooling.config.json or --url=...');
+  }
+
+  const outDir = resolveConfiguredPath(rootDir, paletteConfig.outputDir ?? 'output/palette');
   fs.mkdirSync(outDir, { recursive: true });
-  const screenshotName = 'topkvartiri-home.png';
+  const screenshotName = paletteConfig.screenshotName ?? 'palette-source.png';
+  const htmlTitle = paletteConfig.htmlTitle ?? `${config.projectName || 'site'} palette`;
   const screenshotPath = path.join(outDir, screenshotName);
 
-  console.log(`palette: launching chromium${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''} → ${args.url}`);
+  console.log(`palette: launching chromium${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''} → ${url}`);
   const browser = await chromium.launch({ headless: !args.headed, slowMo: args.slowmo });
   const context = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1 });
   const page = await context.newPage();
   try {
-    await page.goto(args.url, { waitUntil: 'load', timeout: 30_000 });
+    await page.goto(url, { waitUntil: 'load', timeout: 30_000 });
   } catch {
     // continue anyway — most failures here are long-lived assets we don't need
   }
@@ -346,7 +355,7 @@ async function run() {
   const palette = mergePalette(cssData.colors, pixelClusters, { top: args.top });
 
   const summary = {
-    source: args.url,
+    source: url,
     extractedAt: new Date().toISOString(),
     viewport: VIEWPORT,
     k: args.k,
@@ -362,7 +371,7 @@ async function run() {
       pixelClusters: pixelClusters.map((c) => ({ hex: c.hex, share: Number(c.share.toFixed(4)), size: c.size })),
     }, null, 2),
   );
-  fs.writeFileSync(path.join(outDir, 'palette.html'), paletteHtml({ url: args.url, palette, screenshotName }));
+  fs.writeFileSync(path.join(outDir, 'palette.html'), paletteHtml({ title: htmlTitle, url, palette, screenshotName }));
 
   console.log('palette: done');
   console.log(`  → ${path.join(outDir, 'palette.json')}`);

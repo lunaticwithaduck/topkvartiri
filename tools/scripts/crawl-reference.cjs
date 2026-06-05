@@ -11,8 +11,8 @@
 const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadToolingConfig, resolveConfiguredPath } = require('./lib/tooling-config.cjs');
 
-const DEFAULT_URL = 'https://boutiqueholiday-pirin.com/';
 const DEFAULT_DEPTH = 2;
 const DEFAULT_MAX = 15;
 const NAV_TIMEOUT = 30_000;
@@ -21,9 +21,10 @@ const SKIP_EXTENSIONS = /\.(pdf|jpg|jpeg|png|gif|svg|webp|zip|mp4|webm|mp3|css|j
 const SKIP_HASH = /#/;
 
 function parseArgs(argv) {
-  const out = { url: DEFAULT_URL, depth: DEFAULT_DEPTH, max: DEFAULT_MAX, headed: false, slowmo: 0 };
+  const out = { config: null, url: null, depth: DEFAULT_DEPTH, max: DEFAULT_MAX, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
-    if (a.startsWith('--url=')) out.url = a.slice(6);
+    if (a.startsWith('--config=')) out.config = a.slice(9);
+    else if (a.startsWith('--url=')) out.url = a.slice(6);
     else if (a.startsWith('--depth=')) out.depth = Number(a.slice(8));
     else if (a.startsWith('--max=')) out.max = Number(a.slice(6));
     else if (a === '--headed') out.headed = true;
@@ -49,17 +50,24 @@ function normalize(href, originUrl) {
 
 async function run() {
   const args = parseArgs(process.argv);
-  const seedUrl = new URL(args.url);
-  const outDir = path.resolve(__dirname, '..', 'output', 'reference');
+  const { config, rootDir } = loadToolingConfig(args.config);
+  const referenceConfig = config.reference ?? {};
+  const url = args.url ?? referenceConfig.url;
+  if (!url) {
+    throw new Error('reference url is required via tooling.config.json or --url=...');
+  }
+
+  const seedUrl = new URL(url);
+  const outDir = resolveConfiguredPath(rootDir, referenceConfig.outputDir ?? 'output/reference');
   fs.mkdirSync(outDir, { recursive: true });
 
-  console.log(`crawl: seed ${args.url}, depth ${args.depth}, max ${args.max}${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''}`);
+  console.log(`crawl: seed ${url}, depth ${args.depth}, max ${args.max}${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''}`);
   const browser = await chromium.launch({ headless: !args.headed, slowMo: args.slowmo });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
 
   const visited = new Map(); // url → { url, title, depth }
-  const queue = [{ url: args.url, depth: 0 }];
+  const queue = [{ url, depth: 0 }];
 
   while (queue.length && visited.size < args.max) {
     const { url, depth } = queue.shift();
@@ -100,7 +108,7 @@ async function run() {
 
   const routes = [...visited.values()];
   const out = {
-    seed: args.url,
+    seed: url,
     crawledAt: new Date().toISOString(),
     depth: args.depth,
     cap: args.max,

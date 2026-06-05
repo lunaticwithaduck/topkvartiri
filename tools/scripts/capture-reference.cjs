@@ -20,8 +20,8 @@ const { chromium } = require('playwright');
 const { PNG } = require('pngjs');
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadToolingConfig, resolveConfiguredPath } = require('./lib/tooling-config.cjs');
 
-const DEFAULT_ROUTES = path.resolve(__dirname, '..', 'output', 'reference', 'routes.json');
 const NAV_TIMEOUT = 30_000;
 const NETWORK_IDLE_SOFT_TIMEOUT = 4_000;
 const DESKTOP = { width: 1440, height: 900 };
@@ -263,9 +263,10 @@ function cropSectionsFromPng(pngPath, sections, sectionsDir) {
 // --- Main per-route capture ------------------------------------------------
 
 function parseArgs(argv) {
-  const out = { routes: DEFAULT_ROUTES, skipDesktop: false, skipMobile: false, headed: false, slowmo: 0 };
+  const out = { config: null, routes: null, skipDesktop: false, skipMobile: false, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
-    if (a.startsWith('--routes=')) out.routes = path.resolve(a.slice(9));
+    if (a.startsWith('--config=')) out.config = a.slice(9);
+    else if (a.startsWith('--routes=')) out.routes = path.resolve(a.slice(9));
     else if (a === '--skip-desktop') out.skipDesktop = true;
     else if (a === '--skip-mobile') out.skipMobile = true;
     else if (a === '--headed') out.headed = true;
@@ -622,19 +623,22 @@ function renderNotes({ seed, pages }) {
 
 async function run() {
   const args = parseArgs(process.argv);
-  if (!fs.existsSync(args.routes)) {
-    console.error(`capture: routes file not found: ${args.routes}`);
+  const { config, rootDir } = loadToolingConfig(args.config);
+  const referenceConfig = config.reference ?? {};
+  const routesPath = args.routes ?? resolveConfiguredPath(rootDir, referenceConfig.routesFile ?? 'output/reference/routes.json');
+  if (!fs.existsSync(routesPath)) {
+    console.error(`capture: routes file not found: ${routesPath}`);
     console.error('         run `pnpm ref:crawl` first');
     process.exit(2);
   }
-  const routesFile = JSON.parse(fs.readFileSync(args.routes, 'utf8'));
+  const routesFile = JSON.parse(fs.readFileSync(routesPath, 'utf8'));
   const routes = routesFile.routes || [];
   if (!routes.length) {
     console.error('capture: routes file is empty');
     process.exit(2);
   }
 
-  const outDir = path.resolve(__dirname, '..', 'output', 'reference');
+  const outDir = resolveConfiguredPath(rootDir, referenceConfig.outputDir ?? 'output/reference');
   fs.mkdirSync(outDir, { recursive: true });
 
   console.log(`capture: ${routes.length} routes from ${routesFile.seed}${args.headed ? ' (headed)' : ''}${args.slowmo ? ` slowMo=${args.slowmo}ms` : ''}`);

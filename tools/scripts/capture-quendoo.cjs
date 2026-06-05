@@ -40,8 +40,8 @@ const { chromium } = require('playwright');
 const { PNG } = require('pngjs');
 const fs = require('node:fs');
 const path = require('node:path');
+const { loadToolingConfig, resolveConfiguredPath } = require('./lib/tooling-config.cjs');
 
-const DEFAULT_URL = 'https://booking.quendoo.com/fe-bookings-mp/boutique-holiday-MqrPnFoLOC/';
 const NAV_TIMEOUT = 30_000;
 const NETWORK_IDLE_SOFT_TIMEOUT = 4_000;
 const DESKTOP = { width: 1440, height: 900 };
@@ -486,9 +486,10 @@ async function captureDesktopStep(page, stepSlug, outDir, log) {
 }
 
 function parseArgs(argv) {
-  const out = { url: DEFAULT_URL, headed: false, slowmo: 0 };
+  const out = { config: null, url: null, headed: false, slowmo: 0 };
   for (const a of argv.slice(2)) {
-    if (a.startsWith('--url=')) out.url = a.slice(6);
+    if (a.startsWith('--config=')) out.config = a.slice(9);
+    else if (a.startsWith('--url=')) out.url = a.slice(6);
     else if (a === '--headed') out.headed = true;
     else if (a.startsWith('--slowmo=')) out.slowmo = Number(a.slice(9));
   }
@@ -597,8 +598,14 @@ function renderNotes({ url, capturedAt, steps }) {
 
 async function run() {
   const args = parseArgs(process.argv);
-  const url = args.url;
-  const outDir = path.resolve(__dirname, '..', 'output', 'quendoo');
+  const { config, rootDir } = loadToolingConfig(args.config);
+  const quendooConfig = config.quendoo ?? {};
+  const url = args.url ?? quendooConfig.url;
+  if (!url) {
+    throw new Error('quendoo url is required via tooling.config.json or --url=...');
+  }
+
+  const outDir = resolveConfiguredPath(rootDir, quendooConfig.outputDir ?? 'output/quendoo');
   fs.mkdirSync(outDir, { recursive: true });
 
   const capturedAt = new Date().toISOString();

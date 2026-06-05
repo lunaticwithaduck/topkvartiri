@@ -45,6 +45,6 @@ The stack is unpicked. When choosing, factor in:
 
 ## Conventions
 
-- Tooling lives in `tools/` (self-contained, no relation to the eventual app stack). Re-runnable; outputs to `tools/output/`.
+- Tooling lives in `tools/` (self-contained, no relation to the eventual app stack). Project-specific defaults live in `tools/tooling.config.json`, so it can be split into its own repo unchanged. Re-runnable; outputs to `tools/output/`.
 - Don't commit `tools/output/` (gitignored). Don't commit `tools/node_modules/`.
 - When working on UI, default to mirroring boutiqueholiday-pirin's structure (header → main with stacked `<section>` bands → footer), reskinned with the client palette.

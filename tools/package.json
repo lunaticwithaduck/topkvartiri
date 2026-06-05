@@ -1,8 +1,8 @@
 {
-  "name": "topkvartiri-tools",
+  "name": "site-research-tooling",
   "version": "0.0.0",
   "private": true,
-  "description": "Pre-scaffold tooling: derive palette from topkvartiri.com and capture the boutiqueholiday-pirin.com design reference.",
+  "description": "Reusable site-research tooling: extract palettes and capture design references.",
   "scripts": {
     "palette": "node scripts/extract-palette.cjs",
     "ref:crawl": "node scripts/crawl-reference.cjs",
